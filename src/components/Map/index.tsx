@@ -1,4 +1,4 @@
-import { useState, SetStateAction } from "react";
+import { useState, SetStateAction, Key } from "react";
 import ReactMapGL, { Marker } from "react-map-gl";
 
 
@@ -8,9 +8,9 @@ export default function Map({locations, lat, lon}) {
         width: "100%",
         height: "100%",
         // The latitude and longitude of the Piauí
-        latitude: lat,
-        longitude: lon,
-        zoom: 12
+        latitude: -5.0896,
+        longitude: -42.8096,
+        zoom: 10
     });
 
     return (
@@ -20,11 +20,11 @@ export default function Map({locations, lat, lon}) {
             {...viewport}
             onViewportChange={(nextViewport: SetStateAction<{
                 width: string; height: string;
-                // The latitude and longitude of the center of London
                 latitude: number; longitude: number; zoom: number;
+                
             }>) => setViewport(nextViewport)}
             >   
-                {locations.map((location) => (
+                {locations.map((location: { id: Key; center: number[]; }) => (
                         <div key={location.id}>
                             <Marker
                                 latitude={location.center[1]}
