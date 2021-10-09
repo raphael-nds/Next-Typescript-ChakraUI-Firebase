@@ -2,15 +2,15 @@ import { useState, SetStateAction } from "react";
 import ReactMapGL, { Marker } from "react-map-gl";
 
 
-export default function Map({locations}) {
+export default function Map({locations, lat, lon}) {
     
     const [viewport, setViewport] = useState({
         width: "100%",
         height: "100%",
-        // The latitude and longitude of the center of London
-        latitude: -5.03654643434055 ,
-        longitude: -42.4609480355568,
-        zoom: 10
+        // The latitude and longitude of the Piauí
+        latitude: lat,
+        longitude: lon,
+        zoom: 12
     });
 
     return (

@@ -1,39 +1,70 @@
 import { Box, Flex, Input, FormLabel, FormControl, Button, Stack} from "@chakra-ui/react";
 import { FormEvent, useEffect, useState } from "react";
-import Map from '../components/Map/index'
 import dynamic from "next/dynamic";
 
-const Map = dynamic(() => import("../components/Map/index"), {
+const Map = dynamic(() => import("../components/Map"), {
     loading: () => "Loading...",
     ssr: false
-  });
-  
+  })
 
-export default function Map() {
+
+
+const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/teresina,pi'.json?access_token=pk.eyJ1IjoicmFwaGFlbG51bmVzZHMiLCJhIjoiY2tzc29jOW5sMGw4czJ3bGJ4cW9iMGI0cCJ9.BjFyyTyHrSU1CLWyVdqsfA`
+
+
+export default function MapPage(): JSX.Element {
     
-    const [locations, setLocations] = useState([]);
+    const [locations, setLocations] = useState([])
+
+    const [urlLocation, setUrlLocation] = useState(" ")
+
+    const [latitude, setLatitude] = useState()
+
+    const [longitude, setLongitude] = useState()
 
     function searchLocal(e: FormEvent){
         e.preventDefault();
         const local = (document.getElementById("local") as HTMLInputElement).value;
-        console.log("localização-campo:", local)
-        var url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${local}.json?access_token=pk.eyJ1IjoicmFwaGFlbG51bmVzZHMiLCJhIjoiY2tzc29jOW5sMGw4czJ3bGJ4cW9iMGI0cCJ9.BjFyyTyHrSU1CLWyVdqsfA`
-        
-        return url;
-    };
+        const urlLocal = `https://api.mapbox.com/geocoding/v5/${endpoint}/${local}.json?access_token=pk.eyJ1IjoicmFwaGFlbG51bmVzZHMiLCJhIjoiY2tzc29jOW5sMGw4czJ3bGJ4cW9iMGI0cCJ9.BjFyyTyHrSU1CLWyVdqsfA`
+        console.log("urlLocal::::", urlLocal)
+        setUrlLocation(urlLocal);
+        console.log("localização::", urlLocation)
 
-    useEffect(() => {
+    const fetchLocations = async () => {
+        await fetch(urlLocation).then((response) =>
+            response.text()).then((res) => JSON.parse(res))
+        .then((json) => {
+            setLocations(json.features);
+            var latitude = json.features.[0].center[0]
+            var longitude = json.features.[0].center[1]
+
+            setLatitude(latitude)
+            setLongitude(longitude)
+
+            console.log("responst:", json);
+            console.log("lat:", latitude, ", and lon:", longitude);
+        }).catch((err) => console.log({ err }));
+        };
+        fetchLocations();
+    }
+
+    
+    
+
+    /*useEffect(() => {
         const fetchLocations = async () => {
-            await fetch(url).then((response) =>
+            await fetch(urlLocation).then((response) =>
                 response.text()).then((res) => JSON.parse(res))
             .then((json) => {
                 setLocations(json.features);
                 console.log("responst:", json);
+                console.log("responst---:", json.features.[0].center[0], "and", json.features.[0].center[1]);
             }).catch((err) => console.log({ err }));
             };
+
             fetchLocations();
     }, [])
-
+*/
 
     return(
         <Box display="flex" w="100vw" h="100vh">
@@ -60,7 +91,7 @@ export default function Map() {
             </Flex>
 
             <Flex flex="1" >
-                <MapBox locations={locations} />
+                <Map locations={locations} lat={latitude} lon={longitude} />
             </Flex>
         </Box>
     )

@@ -32,7 +32,7 @@ export function Section() {
         <Flex width="100vw" height="100vh" align="center" justify="center">
             <Flex as="form" width="400px" flexDir="column" height="500px" p={8} borderRadius={8} bg="gray.700" > 
                 <Stack spacing={4}>
-                    <Text align="center">SIGN IN</Text>
+                    <Text align="center">SIGN IN (google  ou github)</Text>
                     <FormControl isRequired>
                         <FormLabel>
                             Email:
